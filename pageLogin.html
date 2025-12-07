@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #8697e3 0%, #457bee 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -33,7 +33,7 @@
 
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #527edf 100%);
             padding: 60px 40px;
             color: white;
             display: flex;
@@ -110,7 +110,7 @@
         .btn-login {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #e53935 0%, #c62828 100%);
+            background: linear-gradient(135deg, #2563eb 0%, #527edf 100%);
             color: white;
             border: none;
             border-radius: 8px;
@@ -200,6 +200,7 @@
 
             <form id="loginForm">
                 <div class="form-group">
+                    
                     <label for="role">Vai trò</label>
                     <select id="role" required>
                         <option value="">-- Chọn vai trò --</option>
@@ -240,8 +241,8 @@
                 name: 'Đoàn trường'
             },
             member: {
-                username: 'member',
-                password: 'member123',
+                username: '2150',
+                password: 'Abc123456@',
                 name: 'Đoàn viên'
             }
         };
@@ -290,11 +291,10 @@
                 setTimeout(() => {
                     // Chuyển hướng dựa trên vai trò
                     if (role === 'admin') {
-                        alert('Chuyển đến trang Quản lý hoạt động');
-                        window.location.href = 'pageCapNhatHoatDong.html';
+                        window.location.href = 'pageDashboard.html';
                     } else {
-                        alert('Chuyển đến trang Đăng ký hoạt động');
-                        window.location.href = 'pageDangKyHoatDong.html';
+                        alert('Chuyển đến trang thông tin cá nhân');
+                        window.location.href = 'pageProfile.html';
                     }
                 }, 1500);
             } else {
@@ -307,8 +307,8 @@
             const role = this.value;
             if (role === 'admin') {
                 console.log('Gợi ý: admin / admin123');
-            } else if (role === 'member') {
-                console.log('Gợi ý: member / member123');
+            } else if (role === '22IT001') {
+                console.log('Gợi ý: 22IT001 / 22IT001123');
             }
         });
     </script>

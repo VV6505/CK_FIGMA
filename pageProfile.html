@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Đoàn Viên</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3782f5; 
+            --primary-dark: #2563eb;  
+            --primary-lighter: #60a5fa; 
+            --primary-lightest: #eff6ff; 
+            --gradient-start: #4c8de5; 
+            --gradient-end: #88b1f5;  
+            --text-color: #374151; 
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary-lightest); 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            flex-grow: 1; 
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .header-top {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 1rem 4rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-top .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-top button {
+            background-color: var(--primary-lightest);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+        }
+
+        .header-top button:hover {
+            background-color: #ffffff;
+        }
+
+        .breadcrumb {
+            color: var(--text-color);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-color);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-color);
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .profile-header {
+            background: linear-gradient(to right, var(--gradient-start), var(--gradient-end)); 
+            padding: 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center; 
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .avatar-box {
+            width: 120px; 
+            height: 120px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 5px solid white; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .avatar-box i.fa-user {
+            font-size: 4rem; 
+            color: #ccc;
+        }
+
+        .avatar-upload-btn {
+            position: absolute;
+            bottom: -5px;
+            right: -5px;
+            background-color: #f97316; 
+            color: white;
+            border-radius: 50%;
+            padding: 8px;
+            display: none;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .avatar-upload-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .avatar-upload-btn input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .basic-info h2 {
+            font-size: 2.2rem; 
+            margin: 0 0 5px 0;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+
+        .basic-info p {
+            font-size: 1.1rem; 
+            margin: 0 0 15px 0; 
+            opacity: 0.9;
+        }
+
+        .tags {
+            display: flex;
+            gap: 10px;
+        }
+        .tags span {
+            background-color: rgba(255, 255, 255, 0.3); 
+            padding: 6px 15px; 
+            border-radius: 18px; 
+            font-size: 0.9rem;
+            font-weight: 500;
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            color: white;
+        }
+
+        .action-buttons button {
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s, opacity 0.3s;
+            margin-left: 10px;
+        }
+
+        .action-buttons #editBtn {
+            background-color: white;
+            color: var(--primary-dark);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-buttons #saveBtn {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .action-buttons #cancelBtn {
+            background-color: #ef4444; 
+            color: white;
+        }
+
+        .action-buttons #editBtn:hover {
+            background-color: #f3f4f6;
+        }
+        
+        .profile-content {
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #dbeafe; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 40px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            transition: all 0.3s;
+            color: var(--text-color);
+            box-sizing: border-box;
+            line-height: 1.5; 
+            font-size: 1rem;
+        }
+
+        .form-group input:focus:not(:disabled),
+        .form-group select:focus:not(:disabled) {
+            border-color: var(--primary-color);
+            background-color: white;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .form-group input:disabled,
+        .form-group select:disabled {
+            cursor: not-allowed;
+            color: #797979;      
+            background-color: white; 
+            border-color: transparent; 
+            padding-left: 0; 
+            font-weight: 300;    
+            opacity: 1;         
+            appearance: none;
+        }
+
+        .form-group .note {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .status-tag {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .status-paid {
+            background-color: #d1fae5; 
+            color: #065f46; 
+        }
+        
+        .status-date {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .error-text {
+            color: #ef4444; 
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .system-message {
+            text-align: center;
+            padding: 10px;
+            font-weight: 600;
+            margin-top: 10px;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .system-message.success {
+            background-color: #dcfce7; 
+            color: #15803d; 
+        }
+
+        .system-message.error {
+            background-color: #fee2e2; 
+            color: #b91c1c; 
+        }
+
+        .footer {
+            background-color: #3782f5; 
+            color: white;
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-top">
+        <div class="logo-section">
+            <i class="fa-solid fa-user-graduate"></i>
+            <div>
+                <h2 style="font-size: 1.2rem; margin: 0;">Thông Tin Đoàn Viên</h2>
+                <p style="font-size: 0.8rem; margin: 0; opacity: 0.8;">Trường ĐHSPKT</p>
+            </div>
+        </div>
+        <div class="user-actions">
+            <span style="font-size: 0.9rem; margin-right: 10px;">👤 Nguyễn Văn A</span>
+            <button onclick="window.location.href='pagelogin.html'">Đăng xuất</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div class="breadcrumb">
+            <a href="#">Trang chủ</a> / <span style="font-weight: 600;">Hồ sơ Đoàn viên</span>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-info">
+                    <div class="avatar-box">
+                        <img id="avatar" src="https://i.pinimg.com/736x/4f/16/88/4f16884e6c034f04fd8df26d27937189.jpg" alt="Avatar Sinh Viên">
+                        <label for="avatarInput" class="avatar-upload-btn" id="avatarUploadBtn">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                            <input type="file" id="avatarInput" accept="image/*">
+                        </label>
+                    </div>
+                    
+                    <div class="basic-info">
+                        <h2>Nguyễn Văn A</h2>
+                        <p>Mã ĐV: 22IT001</p>
+                        <div class="tags">
+                            <span>Đoàn viên</span> 
+                            <span>Chi đoàn 22IT1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="editBtn"><i class="fa-solid fa-pen-to-square"></i> Chỉnh Sửa</button>
+                    <button id="saveBtn" style="display:none;"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+                    <button id="cancelBtn" style="display:none;"><i class="fa-solid fa-xmark"></i> Hủy</button>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="section-title">
+                    <i class="fa-solid fa-id-card"></i> Thông Tin Cơ Bản
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-shield-halved"></i> Mã Đoàn viên (MaDV)</label>
+                        <input type="text" id="madv" value="22IT001" disabled>
+
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-user"></i> Họ và tên (hoTen)</label>
+                        <input type="text" id="hoten" value="Nguyễn Văn A" disabled>
+
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-users"></i> Chi đoàn (maChiDoan)</label>
+                        <input type="text" id="chidoan" value="22IT1" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-briefcase"></i> Chức vụ (chucVu)</label>
+                        <input type="text" id="chucvu" value="Đoàn viên" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-envelope"></i> Email (Tự động)</label>
+                        <input type="email" id="email" value="" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-flag"></i> Trạng thái sinh hoạt (trangThaiSH)</label>
+                        <input type="text" id="trangthai" value="Đang sinh hoạt" disabled>
+                    </div>
+                     <div class="form-group">
+                        <label><i class="fa-solid fa-calendar-check"></i> Ngày vào Đoàn (ngayVaoDoan)</label>
+                        <input type="date" id="ngayvaodoan" value="2020-03-26" disabled>
+                    </div>
+                </div>
+
+                <div class="section-title" style="margin-top: 30px;">
+                    <i class="fa-solid fa-pen-to-square"></i> Thông Tin Cá Nhân (Có thể cập nhật)
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-calendar-days"></i> Ngày sinh (ngaySinh)</label>
+                        <input type="date" id="ngaysinh" value="2004-05-15" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-venus-mars"></i> Giới tính (gioiTinh)</label>
+                        <select id="gioitinh" disabled style="width: 100%; padding: 10px 12px; border: 2px solid #e5e7eb; border-radius: 8px; background-color: #f9fafb; color: var(--text-color);">
+                            <option value="Nam" selected>Nam</option>
+                            <option value="Nữ">Nữ</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-phone"></i> Số điện thoại (SDT)</label>
+                        <input type="tel" id="sdt" value="0917145678" disabled maxlength="10">
+                        <span id="phoneError" class="error-text"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-map-location-dot"></i> Nơi chuyển đến (noiChuyenDen)</label>
+                        <input type="text" id="noichuyenden" value="" placeholder="Nhập nơi chuyển đến nếu có" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fa-solid fa-calendar-arrow-right"></i> Ngày chuyển đến (ngayChuyenDen)</label>
+                        <input type="date" id="ngaychuyenden" value="" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="systemMessage" class="system-message"></div>
+    </div>
+
+    <footer class="footer">
+        <p style="margin: 0;">© 2025 Hệ thống Quản lý Đoàn viên - Trường ĐHSPKT | Nhóm 37</p>
+        <p style="margin: 5px 0 0 0; font-size: 1rem;">Cập nhật thông tin cá nhân theo quy định</p>
+    </footer>
+
+    <script>
+        const elements = {
+            // Danh sách các input CÓ THỂ chỉnh sửa
+            inputs: document.querySelectorAll("#ngaysinh, #gioitinh, #sdt, #noichuyenden, #ngaychuyenden"),
+            
+            // Các nút
+            editBtn: document.getElementById("editBtn"),
+            saveBtn: document.getElementById("saveBtn"),
+            cancelBtn: document.getElementById("cancelBtn"),
+            avatarUploadBtn: document.getElementById("avatarUploadBtn"),
+            
+            // Elements khác
+            avatar: document.getElementById("avatar"),
+            avatarInput: document.getElementById("avatarInput"),
+            phoneInput: document.getElementById("sdt"),
+            phoneError: document.getElementById("phoneError"),
+            systemMessage: document.getElementById("systemMessage"),
+            
+            // Lấy MaDV để sinh email
+            madvInput: document.getElementById("madv"),
+            emailInput: document.getElementById("email")
+        };
+
+        // Hàm tự động sinh Email
+        function generateEmail() {
+            const madv = elements.madvInput.value.trim();
+            if (madv) {
+                elements.emailInput.value = `${madv}@sv.ute.udn.vn`;
+            }
+        }
+
+        let isEditing = false;
+        let originalData = {};
+        let originalAvatarSrc = '';
+
+        function updateUI() {
+            elements.inputs.forEach(i => {
+                i.disabled = !isEditing;
+                
+                if (isEditing) {
+                    i.style.borderColor = 'var(--primary-color)';
+                    i.style.background = 'white';
+                    i.style.paddingLeft = '12px';
+                    i.style.fontWeight = 'normal';
+                } else {
+                    i.style.borderColor = 'transparent'; 
+                    i.style.background = 'white';
+                    i.style.paddingLeft = '0';
+                    i.style.fontWeight = '500';
+                    if(i.tagName === 'SELECT') i.style.appearance = 'none';
+                    else i.style.appearance = 'auto';
+                }
+            });
+
+            if(isEditing) {
+                document.getElementById('gioitinh').style.appearance = 'auto';
+            }
+
+            elements.editBtn.style.display = isEditing ? "none" : "inline-block";
+            elements.saveBtn.style.display = isEditing ? "inline-block" : "none";
+            elements.cancelBtn.style.display = isEditing ? "inline-block" : "none";
+            elements.avatarUploadBtn.style.display = isEditing ? "block" : "none";
+
+            if (!isEditing) {
+                clearErrors();
+                hideMessage();
+            }
+        }
+        
+        function handleEdit() {
+            isEditing = true;
+            elements.inputs.forEach(i => originalData[i.id] = i.value);
+            
+            if (elements.avatar.tagName === 'IMG') {
+                originalAvatarSrc = elements.avatar.src;
+            } else {
+                originalAvatarSrc = 'icon';
+            }
+
+            updateUI(); 
+        }
+
+        function handleSave() {
+            if (!validateForm()) {
+                showMessage("❌ Vui lòng kiểm tra lại thông tin bị lỗi!", "error");
+                return;
+            }
+
+            isEditing = false; 
+            updateUI(); 
+
+            showMessage("✅ Cập nhật thông tin đoàn viên thành công!", "success");
+            setTimeout(hideMessage, 4000);
+        }
+
+        function handleCancel() {
+            elements.inputs.forEach(i => i.value = originalData[i.id]);
+            
+            let avatarElement = document.getElementById('avatar');
+            if (originalAvatarSrc === 'icon' && avatarElement.tagName === 'IMG') {
+                avatarElement.outerHTML = `<i id="avatar" class="fa-solid fa-user"></i>`;
+                elements.avatar = document.getElementById('avatar');
+            } else if (originalAvatarSrc !== 'icon' && avatarElement.tagName === 'IMG') {
+                avatarElement.src = originalAvatarSrc;
+            }
+            
+            isEditing = false; 
+            updateUI(); 
+
+            showMessage("❌ Đã hủy thay đổi.", "error");
+            setTimeout(hideMessage, 2000);
+        }
+
+        function handleAvatarChange(e) {
+          if (!isEditing) return;
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                let avatarElement = document.getElementById('avatar');
+                if(avatarElement.tagName === 'I') {
+                    const newImg = document.createElement('img');
+                    newImg.id = 'avatar';
+                    newImg.src = reader.result;
+                    newImg.alt = 'Avatar';
+                    newImg.style.cssText = "width:100%; height:100%; object-fit:cover;";
+                    avatarElement.parentNode.replaceChild(newImg, avatarElement);
+                    elements.avatar = newImg;
+                } else {
+                    avatarElement.src = reader.result;
+                }
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+
+        function validateForm() {
+          let valid = true;
+          clearErrors();
+          
+          const phonePattern = /^0[0-9]{9}$/;
+          if (!phonePattern.test(elements.phoneInput.value) || elements.phoneInput.value.length !== 10) {
+            elements.phoneError.textContent = "⚠️ SĐT không hợp lệ (phải là 10 chữ số bắt đầu bằng 0)!";
+            valid = false;
+          }
+          return valid;
+        }
+        
+        function clearErrors() {
+          elements.phoneError.textContent = "";
+        }
+
+        function showMessage(msg, type) {
+            elements.systemMessage.textContent = msg;
+            elements.systemMessage.className = `system-message ${type}`;
+            elements.systemMessage.style.display = "block";
+        }
+        
+        function hideMessage() {
+            elements.systemMessage.style.display = "none";
+        }
+
+        function mountProfilePage() {
+            if (elements.editBtn) elements.editBtn.onclick = handleEdit;
+            if (elements.saveBtn) elements.saveBtn.onclick = handleSave;
+            if (elements.cancelBtn) elements.cancelBtn.onclick = handleCancel;
+            if (elements.avatarInput) elements.avatarInput.addEventListener("change", handleAvatarChange);
+
+            // Khởi tạo Email tự động ngay khi tải trang
+            generateEmail();
+            
+            updateUI();
+        }
+
+        mountProfilePage();
+    </script>
+</body>
+</html>
