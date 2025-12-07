@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UC1: Đăng nhập - Hệ thống Quản lý Hoạt động Đoàn</title>
+    <title>Đăng nhập - Hệ thống Quản lý Hoạt động Đoàn</title>
     <style>
         * {
             margin: 0;
@@ -104,7 +104,7 @@
         .form-group input:focus,
         .form-group select:focus {
             outline: none;
-            border-color: #e53935;
+            border-color: #2563eb;
         }
 
         .btn-login {
@@ -122,7 +122,7 @@
 
         .btn-login:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(229, 57, 53, 0.3);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
         }
 
         .remember-forgot {
@@ -144,7 +144,7 @@
         }
 
         .remember-forgot a {
-            color: #e53935;
+            color: #2563eb;
             text-decoration: none;
         }
 
@@ -167,6 +167,16 @@
             border: 1px solid #f5c6cb;
         }
 
+        .hint-box {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 13px;
+            color: #1565c0;
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .login-container {
                 flex-direction: column;
@@ -187,7 +197,7 @@
         <div class="login-left">
             <div class="icon">🎓</div>
             <h1>Hệ thống Quản lý Hoạt động Đoàn</h1>
-            <p>Nền tảng quản lý và theo dõi các hoạt động đoàn, giúp kết nối đoàn trường và đoàn viên một cách hiệu quả.</p>
+            <p>Nền tảng quản lý và theo dõi các hoạt động đoàn, giúp kết nối đoàn trường, đoàn khoa và đoàn viên một cách hiệu quả.</p>
         </div>
 
         <div class="login-right">
@@ -200,12 +210,24 @@
 
             <form id="loginForm">
                 <div class="form-group">
-                    
                     <label for="role">Vai trò</label>
                     <select id="role" required>
                         <option value="">-- Chọn vai trò --</option>
                         <option value="admin">Đoàn trường</option>
+                        <option value="faculty">Đoàn khoa</option>
                         <option value="member">Đoàn viên</option>
+                    </select>
+                </div>
+
+                <div id="facultyGroup" class="form-group" style="display:none;">
+                    <label for="faculty">Chọn Khoa</label>
+                    <select id="faculty">
+                        <option value="">-- Chọn khoa --</option>
+                        <option value="CNTT">Khoa CNTT</option>
+                        <option value="CK">Khoa Cơ khí</option>
+                        <option value="SPCN">Khoa Sư phạm Công nghiệp</option>
+                        <option value="DIEN">Khoa Điện - Điện tử</option>
+                        <option value="XAYDUNG">Khoa Xây dựng</option>
                     </select>
                 </div>
 
@@ -218,6 +240,8 @@
                     <label for="password">Mật khẩu</label>
                     <input type="password" id="password" placeholder="Nhập mật khẩu" required>
                 </div>
+
+                <div id="hintBox" class="hint-box"></div>
 
                 <div class="remember-forgot">
                     <label>
@@ -240,15 +264,64 @@
                 password: 'admin123',
                 name: 'Đoàn trường'
             },
+            faculty: {
+                CNTT: { username: 'cntt', password: 'cntt123', name: 'Đoàn Khoa CNTT' },
+                CK: { username: 'ck', password: 'ck123', name: 'Đoàn Khoa Cơ khí' },
+                SPCN: { username: 'spcn', password: 'spcn123', name: 'Đoàn Khoa Sư phạm Công nghiệp' },
+                DIEN: { username: 'dien', password: 'dien123', name: 'Đoàn Khoa Điện' },
+                XAYDUNG: { username: 'xd', password: 'xd123', name: 'Đoàn Khoa Xây dựng' }
+            },
             member: {
-                username: '2150',
-                password: 'Abc123456@',
+                username: 'DV',
+                password: 'DV123',
                 name: 'Đoàn viên'
             }
         };
 
         const loginForm = document.getElementById('loginForm');
         const alertBox = document.getElementById('alert');
+        const roleSelect = document.getElementById('role');
+        const facultyGroup = document.getElementById('facultyGroup');
+        const facultySelect = document.getElementById('faculty');
+        const hintBox = document.getElementById('hintBox');
+
+        // Hiển thị/ẩn dropdown khoa
+        roleSelect.addEventListener('change', function() {
+            const role = this.value;
+            if (role === 'faculty') {
+                facultyGroup.style.display = 'block';
+                facultySelect.required = true;
+            } else {
+                facultyGroup.style.display = 'none';
+                facultySelect.required = false;
+                facultySelect.value = '';
+            }
+            
+            // Hiển thị gợi ý
+            updateHint(role);
+        });
+
+        facultySelect.addEventListener('change', function() {
+            if (roleSelect.value === 'faculty') {
+                updateHint('faculty', this.value);
+            }
+        });
+
+        function updateHint(role, faculty = null) {
+            hintBox.style.display = 'none';
+            
+            if (role === 'admin') {
+                hintBox.innerHTML = '💡 <strong>Gợi ý:</strong> admin / admin123';
+                hintBox.style.display = 'block';
+            } else if (role === 'faculty' && faculty) {
+                const facUser = users.faculty[faculty];
+                hintBox.innerHTML = `💡 <strong>Gợi ý:</strong> ${facUser.username} / ${facUser.username}123`;
+                hintBox.style.display = 'block';
+            } else if (role === 'member') {
+                hintBox.innerHTML = '💡 <strong>Gợi ý:</strong> DV / DV123';
+                hintBox.style.display = 'block';
+            }
+        }
 
         function showAlert(message, type) {
             alertBox.textContent = message;
@@ -263,7 +336,7 @@
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const role = document.getElementById('role').value;
+            const role = roleSelect.value;
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
@@ -272,43 +345,67 @@
                 return;
             }
 
-            const user = users[role];
+            let user = null;
+            let loginData = null;
 
-            if (username === user.username && password === user.password) {
+            // Xác thực theo vai trò
+            if (role === 'admin') {
+                user = users.admin;
+                if (username === user.username && password === user.password) {
+                    loginData = {
+                        role: 'admin',
+                        username: username,
+                        name: user.name,
+                        loginTime: new Date().toISOString()
+                    };
+                }
+            } else if (role === 'faculty') {
+                const faculty = facultySelect.value;
+                if (!faculty) {
+                    showAlert('Vui lòng chọn khoa!', 'error');
+                    return;
+                }
+                user = users.faculty[faculty];
+                if (username === user.username && password === user.password) {
+                    loginData = {
+                        role: 'faculty',
+                        maKhoa: faculty,
+                        username: username,
+                        name: user.name,
+                        loginTime: new Date().toISOString()
+                    };
+                }
+            } else if (role === 'member') {
+                user = users.member;
+                if (username === user.username && password === user.password) {
+                    loginData = {
+                        role: 'member',
+                        username: username,
+                        name: user.name,
+                        loginTime: new Date().toISOString()
+                    };
+                }
+            }
+
+            if (loginData) {
                 showAlert('Đăng nhập thành công! Đang chuyển hướng...', 'success');
                 
-                // Lưu thông tin đăng nhập
-                const loginData = {
-                    role: role,
-                    username: username,
-                    name: user.name,
-                    loginTime: new Date().toISOString()
-                };
-
-                // Hiển thị thông tin trong console
+                // Lưu thông tin đăng nhập vào sessionStorage
+                sessionStorage.setItem('currentUser', JSON.stringify(loginData));
+                
                 console.log('Đăng nhập thành công:', loginData);
 
                 setTimeout(() => {
-                    // Chuyển hướng dựa trên vai trò
                     if (role === 'admin') {
-                        window.location.href = 'pageDashboard.html';
+                        window.location.href = 'pageCapNhatHoatDong.html';
+                    } else if (role === 'faculty') {
+                        window.location.href = 'pageCapNhatHoatDongKhoa.html';
                     } else {
-                        alert('Chuyển đến trang thông tin cá nhân');
                         window.location.href = 'pageProfile.html';
                     }
                 }, 1500);
             } else {
                 showAlert('Tên đăng nhập hoặc mật khẩu không đúng!', 'error');
-            }
-        });
-
-        // Hiển thị gợi ý đăng nhập
-        document.getElementById('role').addEventListener('change', function() {
-            const role = this.value;
-            if (role === 'admin') {
-                console.log('Gợi ý: admin / admin123');
-            } else if (role === '22IT001') {
-                console.log('Gợi ý: 22IT001 / 22IT001123');
             }
         });
     </script>
